@@ -5,7 +5,7 @@ from random import*
 import sys
 
 #сукаебаный гит как ты заебал
-#main
+#dla div
 
 #Fixedsys
 #Verdana
