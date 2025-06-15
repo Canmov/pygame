@@ -92,6 +92,12 @@ def draw_target_actions():
 # клетка 10га
 # 1 чел 0.3га 
 # первобытном общине не 150 чел
+options = ['number','date of birth','age','satiety','location','']
+def gen_map_new_people():
+    global map_people
+    map_pepole= np.zeros((1,len(options)),dtype='int32')
+def get_born_people():
+def get_info_people():
 
 def gen_map_eat():
     global map_eat
