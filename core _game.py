@@ -2,10 +2,11 @@ import pygame
 import numpy as np
 import pygame_gui
 from random import*
+from pygame.locals import *
 import sys
 
 #сукаебаный гит как ты заебал
-#main
+#dla div
 
 #Fixedsys
 #Verdana
@@ -185,7 +186,7 @@ def hunger_update():
 # нужно доделать функцию на практике, сдеалть тест мод            
 
 #количество людей
-def gen_map_kol_people(): #нужно сделать ген фор страт гейм и слить все сюда
+def gen_map_people(): #нужно сделать ген фор страт гейм и слить все сюда
     global map_kol_people #матрица кол людишек
     map_kol_people= np.zeros((map_size,map_size),dtype='int32')
     for y in range(len(map_kol_people)):
@@ -205,7 +206,22 @@ def gen_map_kol_people(): #нужно сделать ген фор страт г
     map_percent_people_hunger = np.zeros((map_size,map_size),dtype='int32')
     global map_kol_people_hunger # матрица для количества голодных
     map_kol_people_hunger = np.zeros((map_size,map_size),dtype='int32')
+    global dict_pep_years
+    dict_pep_years  = {0:np.zeros((map_size,map_size),dtype='int32')}
 
+def age_year_update():
+      key=[]
+      for k in dict_pep_years:
+            key.append(k)
+      for i in range(len(dict_pep_years)):
+            dict_pep_years[int(key[i])+1]=dict_pep_years[key[i]]
+            dict_pep_years[key[i]] = np.zeros((map_size,map_size),dtype='int32')
+
+def print_slovar(slovar):
+      for key in slovar:
+            print(key)
+            print(str(slovar[key]).replace('[','').replace(']',''))
+            
 def born_update_people(): # функция рождаемости  
     for y in range(map_size):
         for x in range(map_size): # настроить типы клеток 
@@ -237,7 +253,7 @@ def draw_kol_people(map_kol_people):
             block_map_out = font_small.render((str(map_kol_people[y][x])), True, (0,0,0))
             window.blit(block_map_out,(15*8+x*15*10,y*20*4+20*3))
 
-gen_map_kol_people()
+gen_map_people()
 
 def gen_block_map():
     global block_map
@@ -316,13 +332,13 @@ def num0(x_cord,y_cord,img,kol_str):
 window_size = (1080,720)
 window = pygame.display.set_mode(window_size)
 
-def clock_base(time_sec_in):
-    time_hour=time_sec_in//60//60
-    time_min=time_sec_in//60-(60*time_hour)
-    time_sec=time_sec_in-(60*time_min)-(60*60*time_hour)
-    return (str(time_hour)+':'+str(time_min)+':'+str(time_sec))
+# дописать сезоны
+# дописать  день ночь и тд и тп
+def clock_base(time_day_in):
+    time_year=time_day_in//365
+    time_day=time_day_in-(365*time_year)
+    return (str(time_year)+':'+str(time_day))
     
-
 pause_flag=not True
 def time_start(time_over_clock):
     clock_ex = font_big.render(clock_base(time_over_clock), True, (0, 255, 0))
@@ -332,9 +348,9 @@ def time_start(time_over_clock):
 pygame.init()
 
 clock = pygame.time.Clock()
-#font_big = pygame.font.SysFont("Verdana", 30)
-font_big = pygame.font.Font('Fixedsys.ttf', 50)
-font_small = pygame.font.Font('Fixedsys.ttf', 30)
+#font_big = pygame.font.SysFont("Verdana", 30) 
+font_big = pygame.font.Font('master\Fixedsys.ttf', 50)
+font_small = pygame.font.Font('master\Fixedsys.ttf', 30)
 
 clock_delay=0
 time_over=0
