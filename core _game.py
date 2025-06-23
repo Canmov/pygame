@@ -15,7 +15,7 @@ import sys
 time_over_clock=0
 size_pixel = 10
 red = (230, 0, 0)
-map_size=5
+map_size=2
 need_eat=2
 
 
@@ -150,9 +150,9 @@ def draw_city(map_city):
     for y in range(len(map_city)):
         for x in range(len(map_city[y])):
             if map_city[y][x] == 1:
-                ans = "гор"
+                ans = "пос"
             else:
-                ans = "пол"
+                ans = "луг"
             block_map_out = font_small.render((str(ans)), True, (0,0,0))
             window.blit(block_map_out,(15*1+x*15*10,y*20*4+20*1))
 
@@ -209,17 +209,32 @@ def gen_map_people(): #нужно сделать ген фор страт гей
     global dict_pep_years
     dict_pep_years  = {0:np.zeros((map_size,map_size),dtype='int32')}
 
+def get_count_people(y,x):
+    sum = 0
+    for key in dict_pep_years:
+        sum+=dict_pep_years[key][y][x]
+    return sum
+
+def set_dict_pep_years(count,year,y,x,):
+    if year not in dict_pep_years:
+        dict_pep_years[year] = np.zeros((map_size,map_size),dtype='int32') 
+        dict_pep_years[year][y][x]=count
+    else:dict_pep_years[year][y][x]=count
+
 def age_year_update():
-      key=[]
-      for k in dict_pep_years:
-            key.append(k)
-      for i in range(len(dict_pep_years)):
-            dict_pep_years[int(key[i])+1]=dict_pep_years[key[i]]
-            dict_pep_years[key[i]] = np.zeros((map_size,map_size),dtype='int32')
+    #print('before ',end='')
+    #print_slovar(dict_pep_years)
+    key=[]
+    for k in dict_pep_years:
+        key.append(k)
+    for i in range(len(dict_pep_years)):
+        dict_pep_years[int(key[i])+1]=dict_pep_years[key[i]]
+        dict_pep_years[key[i]] = np.zeros((map_size,map_size),dtype='int32')
+    #print('after ',end='')
+    #print_slovar(dict_pep_years)
 
 def print_slovar(slovar):
-      for key in slovar:
-            print(key)
+      for key in slovar: 
             print(str(slovar[key]).replace('[','').replace(']',''))
             
 def born_update_people(): # функция рождаемости  
@@ -380,6 +395,9 @@ while True:
                     print(text_console)# Обработка введенного текста
                     if text_console== 'planting crops' or text_console== 'pl cr':
                         eat_planting_crops() 
+                    if text_console[:9]== 'set years':
+                        iter=(text_console[9:]).split() 
+                        set_dict_pep_years(iter[-1],iter[0],iter[1],iter[2],)
                     text_console = ''
                     active_console = not active_console
                 elif event.key == pygame.K_BACKSPACE:
@@ -387,7 +405,7 @@ while True:
                 else:
                     text_console += event.unicode
 
-        elif event.type == pygame.KEYDOWN and active_console == False: #в случае нажатия конопки
+        elif event.type == pygame.KEYDOWN and active_console == False: #в случае не нажатия конопки
             if event.key == pygame.K_SPACE \
                 and active_console == False :
                 if pause_flag==False:
@@ -396,6 +414,9 @@ while True:
                     pause_flag= not pause_flag
 
                 #[y][x]
+
+            elif event.key == pygame.K_f:age_year_update()
+
             elif event.key == pygame.K_w:
                 old_pos=get_target_cursor()
                 zero_map_cursor()
